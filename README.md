@@ -31,4 +31,4 @@ Is a shell command we can use to invoke, pipe to, pipe from, or pipe in both dir
 ## Authors 
 [Jose Oliva](https://github.com/Meme-x03/Meme-x03.git)
 
-[Christopher wrigth](https://github.com/NamesteSensei)
+[Christopher Wrigth](https://github.com/NamesteSensei)
