@@ -1,6 +1,6 @@
-# Project Shell in C Language
+# Project  Simple Shell in C Language
 
-# Description
+## Description
 In this project are we going to do a simple shell project/tutorial. Using the C programming language.
 
 >Quote of this project
@@ -13,12 +13,12 @@ A shell is a program that acts as an interface between the user and the operatin
 
 ## Example
 The shell can be used in interactive or non-interactive mode. That is what usually use the interactive mode is normally more used. Can be run it like this:
-
-$ echo "echo 'hello everyone'" | ./hsh
-'hello everyone'
+```
+$ echo "echo 'hello'" | ./hsh
+'hello'
 $
-
+```
 ## What is the hsh do?
-Is a shell command we can use to invoke, pipe to, pipe from, or pipe in both directions. All commands that can be run as shelll commands.
+Is a shell command we can use to invoke, pipe to, pipe from, or pipe in both directions. All commands that can be run as shell command
 
-# Flow Chart ![alt text](flowchart.png)
+## Flow Chart ![alt text](68747470733a2f2f692e6962622e636f2f644d74516e30512f556e7469746c65642d4469616772616d2d64726177696f2d322d322d362d342e6a7067.jpg)
