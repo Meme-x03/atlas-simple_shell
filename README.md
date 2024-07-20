@@ -26,4 +26,4 @@ Is a shell command we can use to invoke, pipe to, pipe from, or pipe in both dir
 `gcc -Wall -Werror -Wextra -pedantic -std=gnu89 *.c -o hsh`
 
 ## Flow Chart
-![A cute cat image](https://hips.hearstapps.com/hmg-prod/images/cute-cat-photos-1593441022.jpg?crop=1.00xw:0.753xh;0,0.153xh&resize=1200:*)
+![flowchart](https://images.app.goo.gl/yet9Rpu1WSwe7Tbn6)
