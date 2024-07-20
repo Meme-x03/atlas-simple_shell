@@ -29,5 +29,6 @@ Is a shell command we can use to invoke, pipe to, pipe from, or pipe in both dir
 ![Image of Flowchart](https://i.ibb.co/dMtQn0Q/Untitled-Diagram-drawio-2-2-6-4.jpg)
 
 ## Authors 
-[Jose Oliva](https://github.com/Meme-x03/Meme-x03.git).
-[Christopher wrigth](https://github.com/NamesteSensei.git).
+[Jose Oliva](https://github.com/Meme-x03/Meme-x03.git)
+
+[Christopher wrigth](https://github.com/NamesteSensei)
