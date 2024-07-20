@@ -13,6 +13,7 @@ A shell is a program that acts as an interface between the user and the operatin
 
 ## Example
 The shell can be used in interactive or non-interactive mode. That is what usually use the interactive mode is normally more used. Can be run it like this:
+
 $ echo "echo 'hello everyone'" | ./hsh
 'hello everyone'
 $
