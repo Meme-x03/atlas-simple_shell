@@ -11,6 +11,9 @@
 /* Function prototypes */
 void prompt(void);
 int main(void);
+char *read_input(void);
+char **split_line(char *line);
+void execute_command(char **argv);
 
 #endif /* MAIN_H */
 
