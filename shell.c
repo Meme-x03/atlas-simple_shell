@@ -7,53 +7,56 @@
  */
 int main(void)
 {
-	char *line = NULL;   /* This will store the command we type */
-	size_t len = 0;      /* This will store the size of the buffer */
-	ssize_t nread;       /* This will store the number of characters read by getline */
-	char *argv[10];      /* This will store the command and its arguments */
-	int argc;            /* This will store the number of arguments */
+	char *line = NULL; /* Command input */
+	size_t len = 0; /* Size of buffer */
+	ssize_t nread; /* Number of chars read by getline */
+	char *argv[10]; /* Command and args */
+	int argc; /* Number of args */
 
-	while (1)  /* This loop will run forever until we tell it to stop */
+	while (1) /* Infinite loop until exit */
 	{
-		prompt();   /* Print the prompt to the screen */
+		prompt(); /* Print the prompt */
 
-		nread = getline(&line, &len, stdin);   /* Read the command from the user */
+		nread = getline(&line, &len, stdin); /* Read user input */
 
-		if (nread == -1)   /* If we get an error or EOF (Ctrl+D), we exit the loop */
+		if (nread == -1) /* Check for error or EOF (Ctrl+D) */
 		{
-			free(line);   /* Free the memory we allocated for the command */
-			exit(EXIT_SUCCESS);   /* Exit the program successfully */
+			printf("\n"); /* Print newline */
+			free(line); /* Free memory */
+			exit(EXIT_SUCCESS); /* Exit program */
 		}
 
-		line[nread - 1] = '\0';   /* Remove the newline character at the end */
+		line[nread - 1] = '\0'; /* Remove newline char */
 
-		argc = 0;   /* Initialize the argument count */
-		argv[argc] = strtok(line, " ");   /* Split the command into words */
+		argc = 0; /* Init arg count */
+		argv[argc] = strtok(line, " "); /* Split command into words */
 
-		while (argv[argc] != NULL)   /* Split the rest of the command */
+		while (argv[argc] != NULL) /* Split remaining command */
+		{
 			argv[++argc] = strtok(NULL, " ");
-
-		if (fork() == 0)   /* Create a child process */
-		{
-			execve(argv[0], argv, NULL);   /* Execute the command in the child process */
-			perror("execve");   /* If execve fails, print an error message */
-			exit(EXIT_FAILURE);   /* Exit the child process if execve fails */
 		}
-		else   /* Parent process waits for the child to finish */
+
+		if (fork() == 0) /* Create child process */
 		{
-			wait(NULL);   /* Wait for the child process to finish */
+			execve(argv[0], argv, NULL); /* Execute command */
+			perror("execve"); /* Print error if execve fails */
+			exit(EXIT_FAILURE); /* Exit child process */
+		}
+		else /* Parent process waits */
+		{
+			wait(NULL); /* Wait for child to finish */
 		}
 	}
 
-	free(line);   /* Free the memory we allocated for the command */
-	return (0);     /* Return 0 to indicate the program ended successfully */
+	free(line); /* Free memory */
+	return (0); /* Return success */
 }
 
 /**
- * prompt - Prints the prompt to the screen
+ * prompt - Prints the prompt
  */
 void prompt(void)
 {
-	printf("#cisfun$ ");   /* Print the prompt to the screen */
+	printf("#cisfun$ "); /* Print prompt */
 }
 
