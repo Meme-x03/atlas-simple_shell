@@ -10,10 +10,12 @@ int main(void)
 	while (1) /* Infinite loop until exit */
 	{
 		char *line = read_input();
+
 		if (line == NULL)
 			break;
-		
+
 		char **argv = split_line(line);
+
 		if (argv == NULL)
 		{
 			free(line);
@@ -21,7 +23,7 @@ int main(void)
 		}
 
 		execute_command(argv);
-		
+
 		free(line);
 		free(argv);
 	}
