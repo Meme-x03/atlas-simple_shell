@@ -1,4 +1,5 @@
 #include "main.h"
+#include <errno.h>
 
 /**
  * main - Entry point for the shell
@@ -18,16 +19,12 @@ int main(void)
         nread = getline(&line, &len, stdin);
         if (nread == -1)
         {
-            if (feof(stdin))
+            if (errno == EINTR)
             {
-                printf("\n");
-                break;  /* Handle EOF (Ctrl+D) */
+                continue;  /* Ignore interrupted system calls */
             }
-            else
-            {
-                perror("getline");
-                continue;
-            }
+            free(line);
+            exit(0);  /* Exit on EOF or error */
         }
 
         /* Remove newline character */
