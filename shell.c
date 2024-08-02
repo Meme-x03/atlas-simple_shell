@@ -1,104 +1,61 @@
-#include "main.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <sys/wait.h>
 
-/**
- * main - Entry point of the simple shell
- *
- * Return: Always 0 (Success)
- */
+#define MAX_LINE 80
+
 int main(void)
 {
-	while (1) /* Infinite loop until exit */
-	{
-		char *line = read_input();
+    char *args[MAX_LINE / 2 + 1]; /* command line arguments */
+    char input[MAX_LINE];         /* user input */
+    int should_run = 1;           /* flag to determine when to exit program */
 
-		if (line == NULL)
-			break;
+    while (should_run)
+    {
+        printf("simple_shell> ");
+        fflush(stdout);
 
-		char **argv = split_line(line);
+        if (!fgets(input, MAX_LINE, stdin))
+            break;
 
-		if (argv == NULL)
-		{
-			free(line);
-			continue;
-		}
+        size_t length = strlen(input);
+        if (input[length - 1] == '\n')
+            input[length - 1] = '\0';
 
-		execute_command(argv);
+        int i = 0;
+        args[i] = strtok(input, " ");
+        while (args[i] != NULL)
+        {
+            i++;
+            args[i] = strtok(NULL, " ");
+        }
 
-		free(line);
-		free(argv);
-	}
-	return (0); /* Return success */
-}
+        if (args[0] == NULL)
+            continue;
+        if (strcmp(args[0], "exit") == 0)
+            should_run = 0;
 
-/**
- * prompt - Prints the prompt
- */
-void prompt(void)
-{
-	printf("#cisfun$ "); /* Print prompt */
-}
-
-/**
- * read_input - Reads input from the user
- *
- * Return: The input line or NULL on EOF
- */
-char *read_input(void)
-{
-	char *line = NULL;
-	size_t len = 0;
-	ssize_t nread;
-
-	prompt(); /* Print the prompt */
-	nread = getline(&line, &len, stdin); /* Read user input */
-
-	if (nread == -1) /* Check for error or EOF (Ctrl+D) */
-	{
-		free(line); /* Free memory */
-		return (NULL);
-	}
-
-	line[nread - 1] = '\0'; /* Remove newline char */
-	return (line);
-}
-
-/**
- * split_line - Splits a line into arguments
- * @line: The input line
- *
- * Return: An array of arguments
- */
-char **split_line(char *line)
-{
-	int argc = 0;
-	char **argv = malloc(10 * sizeof(char *)); /* Command and args */
-
-	if (!argv)
-		return (NULL);
-
-	argv[argc] = strtok(line, " "); /* Split command into words */
-	while (argv[argc] != NULL) /* Split remaining command */
-	{
-		argv[++argc] = strtok(NULL, " ");
-	}
-	return (argv);
-}
-
-/**
- * execute_command - Executes a command
- * @argv: An array of arguments
- */
-void execute_command(char **argv)
-{
-	if (fork() == 0) /* Create child process */
-	{
-		execve(argv[0], argv, NULL); /* Execute command */
-		perror("execve"); /* Print error if execve fails */
-		exit(EXIT_FAILURE); /* Exit child process */
-	}
-	else /* Parent process waits */
-	{
-		wait(NULL); /* Wait for child to finish */
-	}
+        pid_t pid = fork();
+        if (pid < 0)
+        {
+            fprintf(stderr, "Fork Failed\n");
+            return 1;
+        }
+        else if (pid == 0)
+        {
+            if (execvp(args[0], args) == -1)
+            {
+                fprintf(stderr, "Command not found\n");
+            }
+            exit(0);
+        }
+        else
+        {
+            wait(NULL);
+        }
+    }
+    return 0;
 }
 
