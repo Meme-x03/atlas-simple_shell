@@ -1,27 +1,18 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-/**
- * File: main.h
- * Author: Your Name
- * Description: Header file containing function prototypes for simple shell.
- */
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <string.h>
+
+/* Function declarations */
+void display_prompt(void);
+int execute_command(char *cmd);
 
 extern char **environ;
-
-/**
- * handle_command - Handles execution of a command.
- * @args: Array of arguments.
- */
-void handle_command(char *args[]);
-
-/**
- * find_command - Finds the full path of a command.
- * @command: The command to find.
- *
- * Return: The full path of the command, or NULL if not found.
- */
-char *find_command(char *command);
 
 #endif /* MAIN_H */
 

@@ -1,131 +1,63 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
-#include <sys/wait.h>
-#include <sys/stat.h>
 #include "main.h"
 
-#define MAX_LINE 80
-
 /**
- * main - Entry point for the simple shell
+ * main - Entry point for the shell
  *
- * Return: 0 on success, or an error code on failure
+ * Return: Always 0 on success, or an error code on failure
  */
 int main(void)
 {
-	char *args[MAX_LINE / 2 + 1]; /* command line arguments */
-	char input[MAX_LINE];         /* user input */
-	int should_run = 1;           /* flag to determine when to exit program */
-	size_t length;
-	int i;
+    char *line = NULL;
+    size_t len = 0;
+    ssize_t nread;
+    char *argv[2];
 
-	while (should_run)
-	{
-		printf("simple_shell> ");
-		fflush(stdout);
+    while (1)
+    {
+        display_prompt();
+        nread = getline(&line, &len, stdin);
+        if (nread == -1)
+        {
+            if (feof(stdin))
+            {
+                printf("\n");
+                break;  /* Handle EOF (Ctrl+D) */
+            }
+            else
+            {
+                perror("getline");
+                continue;
+            }
+        }
 
-		if (!fgets(input, MAX_LINE, stdin))
-			break;
+        /* Remove newline character */
+        line[nread - 1] = '\0';
 
-		length = strlen(input);
-		if (input[length - 1] == '\n')
-			input[length - 1] = '\0';
+        /* Check for exit command */
+        if (strcmp(line, "exit") == 0)
+        {
+            free(line);
+            exit(0);
+        }
 
-		i = 0;
-		args[i] = strtok(input, " ");
-		while (args[i] != NULL)
-		{
-			i++;
-			args[i] = strtok(NULL, " ");
-		}
+        argv[0] = line;
+        argv[1] = NULL;
 
-		if (args[0] == NULL)
-			continue;
+        if (fork() == 0)
+        {
+            /* Child process */
+            execve(argv[0], argv, environ);
+            perror("./hsh");
+            exit(EXIT_FAILURE);
+        }
+        else
+        {
+            /* Parent process */
+            wait(NULL);
+        }
+    }
 
-		if (strcmp(args[0], "exit") == 0)
-			should_run = 0;
-		else
-			handle_command(args);
-	}
-
-	return (0);
-}
-
-/**
- * handle_command - Handles execution of a command
- * @args: Array of arguments
- */
-void handle_command(char *args[])
-{
-	pid_t pid;
-	char *command_path;
-
-	command_path = find_command(args[0]);
-	if (command_path == NULL)
-	{
-		fprintf(stderr, "%s: Command not found\n", args[0]);
-		return;
-	}
-
-	pid = fork();
-	if (pid < 0)
-	{
-		perror("Fork failed");
-		exit(EXIT_FAILURE);
-	}
-	else if (pid == 0)
-	{
-		if (execve(command_path, args, environ) == -1)
-		{
-			perror("Command execution failed");
-		}
-		exit(EXIT_FAILURE);
-	}
-	else
-	{
-		wait(NULL);
-	}
-
-	free(command_path);
-}
-
-/**
- * find_command - Finds the full path of a command
- * @command: The command to find
- *
- * Return: The full path of the command, or NULL if not found
- */
-char *find_command(char *command)
-{
-	char *path = getenv("PATH");
-	char *path_dup = strdup(path);
-	char *dir = strtok(path_dup, ":");
-	struct stat buffer;
-
-	if (stat(command, &buffer) == 0)
-	{
-		free(path_dup);
-		return (strdup(command));
-	}
-
-	while (dir != NULL)
-	{
-		char *full_path = malloc(strlen(dir) + strlen(command) + 2);
-
-		sprintf(full_path, "%s/%s", dir, command);
-		if (stat(full_path, &buffer) == 0)
-		{
-			free(path_dup);
-			return (full_path);
-		}
-
-		free(full_path);
-		dir = strtok(NULL, ":");
-	}
-
-	free(path_dup);
-	return (NULL);
+    free(line);
+    return (0);
 }
 
