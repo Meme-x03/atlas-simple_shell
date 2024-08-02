@@ -8,6 +8,11 @@
 
 #define MAX_LINE 80
 
+/**
+ * main - Entry point for the simple shell
+ *
+ * Return: 0 on success, or an error code on failure
+ */
 int main(void)
 {
 	char *args[MAX_LINE / 2 + 1]; /* command line arguments */
@@ -48,6 +53,10 @@ int main(void)
 	return (0);
 }
 
+/**
+ * handle_command - Handles execution of a command
+ * @args: Array of arguments
+ */
 void handle_command(char *args[])
 {
 	pid_t pid;
@@ -82,6 +91,12 @@ void handle_command(char *args[])
 	free(command_path);
 }
 
+/**
+ * find_command - Finds the full path of a command
+ * @command: The command to find
+ *
+ * Return: The full path of the command, or NULL if not found
+ */
 char *find_command(char *command)
 {
 	char *path = getenv("PATH");
