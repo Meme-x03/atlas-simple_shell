@@ -44,6 +44,7 @@ int main(void)
 		else
 			handle_command(args);
 	}
+
 	return (0);
 }
 
@@ -77,6 +78,7 @@ void handle_command(char *args[])
 	{
 		wait(NULL);
 	}
+
 	free(command_path);
 }
 
@@ -90,18 +92,18 @@ char *find_command(char *command)
 	if (stat(command, &buffer) == 0)
 	{
 		free(path_dup);
-		return strdup(command);
+		return (strdup(command));
 	}
 
 	while (dir != NULL)
 	{
 		char *full_path = malloc(strlen(dir) + strlen(command) + 2);
-		sprintf(full_path, "%s/%s", dir, command);
 
+		sprintf(full_path, "%s/%s", dir, command);
 		if (stat(full_path, &buffer) == 0)
 		{
 			free(path_dup);
-			return full_path;
+			return (full_path);
 		}
 
 		free(full_path);
@@ -109,6 +111,6 @@ char *find_command(char *command)
 	}
 
 	free(path_dup);
-	return NULL;
+	return (NULL);
 }
 
